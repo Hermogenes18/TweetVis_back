@@ -145,6 +145,12 @@ def database_media_desviacion():
     result = temp_df.reset_index().groupby("sentiment")["token"].agg(['mean', 'std']).to_json()
     return json.loads(result)
 
+@app.route('/database/correlacion')
+def database_correlacionn():
+    result = tweets_pivot.corr(method=similitud_coseno).to_json()
+    return json.loads(result)
+
+
 @app.route('/')
 def hello_world():
     return 'Hello World!'
