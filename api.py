@@ -114,17 +114,22 @@ tweets_pivot.corr(method=similitud_coseno)
 
 
 
-
-
-
 app = Flask(__name__)
+
+
 
 @app.route('/database')
 def database_row():
-    return "database_row"
+    result = tweets.to_json(orient="table")
+    parsed = json.loads(result)
+    return parsed
 
 @app.route('/database/data_time')
 def database_date_time():
+    return tweets.groupby('ID')['date_time'].apply(list).to_json()
+
+@app.route('/database/tiempo')
+def database_tiempo():
     return tweets.groupby('ID')['date_time'].apply(list).to_json()
 
 @app.route('/database/total_sentiment')
@@ -134,7 +139,6 @@ def database_total_autor():
 @app.route('/database/distinct_sentiment')
 def database_distinct_autor():
     return tweets_tidy.groupby(by='sentiment')['token'].nunique().to_json()
-
 
 @app.route('/')
 def hello_world():
