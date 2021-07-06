@@ -92,6 +92,31 @@ stop_words.extend(("amp", "xa", "xe"))
 tweets_tidy = tweets_tidy[~(tweets_tidy["token"].isin(stop_words))]
 
 
+# Pivotado de datos
+# ==============================================================================
+tweets_pivot = tweets_tidy.groupby(["sentiment","token"])["token"] \
+                .agg(["count"]).reset_index() \
+                .pivot(index = "token" , columns="sentiment", values= "count")
+tweets_pivot.columns.name = None
+
+
+# Test de correlación (coseno) por el uso y frecuencia de palabras
+# ==============================================================================
+from scipy.spatial.distance import cosine
+
+def similitud_coseno(a,b):
+    distancia = cosine(a,b)
+    return 1-distancia
+
+tweets_pivot.corr(method=similitud_coseno)
+
+
+
+
+
+
+
+
 app = Flask(__name__)
 
 @app.route('/database')
@@ -105,6 +130,10 @@ def database_date_time():
 @app.route('/database/total_sentiment')
 def database_total_autor():
     return tweets_tidy.groupby(by='sentiment')['token'].count().to_json()
+
+@app.route('/database/distinct_sentiment')
+def database_distinct_autor():
+    return tweets_tidy.groupby(by='sentiment')['token'].nunique().to_json()
 
 
 @app.route('/')
