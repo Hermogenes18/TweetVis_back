@@ -1,4 +1,4 @@
 # TweetVis_back
-##RUN
+## RUN
 - source venv/bin/activate
 - flask run
