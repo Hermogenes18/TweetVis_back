@@ -140,6 +140,11 @@ def database_total_autor():
 def database_distinct_autor():
     return tweets_tidy.groupby(by='sentiment')['token'].nunique().to_json()
 
+@app.route('/database/media_desviacion')
+def database_media_desviacion():
+    result = temp_df.reset_index().groupby("sentiment")["token"].agg(['mean', 'std']).to_json()
+    return json.loads(result)
+
 @app.route('/')
 def hello_world():
     return 'Hello World!'
