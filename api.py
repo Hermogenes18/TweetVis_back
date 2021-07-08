@@ -110,7 +110,26 @@ def similitud_coseno(a,b):
 
 tweets_pivot.corr(method=similitud_coseno)
 
+#Informacion de los datos
 
+def merge(list1, list2):
+      
+    merged_list = [(list1[i], list2[i]) for i in range(0, len(list1))]
+    return merged_list
+
+def mostrar_datos():
+  resultado = []
+  caracteristicas = ["count","unique","top","freq"]
+  columnas = []
+  for i in range(1,len(tweets.columns),1):
+    descripcion = tweets[tweets.columns[i]].describe()
+    columnas.append(tweets.columns[i])
+    #descripcion.append(tweets.columns[i])
+    #print(descripcion)
+    #current = merge(caracteristicas,descripcion.to_list())
+    resultado.append(descripcion.to_list())
+  df = pd.DataFrame(resultado,index=columnas,columns=caracteristicas)
+  return df 
 
 
 
@@ -123,6 +142,14 @@ def database_row():
     result = tweets.to_json(orient="table")
     parsed = json.loads(result)
     return parsed
+
+@app.route('/database/information_data')
+def database_information_data():
+    a = mostrar_datos()
+    result = a.to_json(orient="index")
+    parsed = json.loads(result)
+    return parsed
+
 
 @app.route('/database/data_time')
 def database_date_time():
