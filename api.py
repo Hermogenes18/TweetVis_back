@@ -65,6 +65,9 @@ tweets_tidy = tweets_tidy.rename(columns={'texto_tokenizado':'token'})
 tweets_tidy.groupby(by='sentiment')['token'].count()
 
 
+
+#Frecuencia de palabras
+
 mUsado = tweets_tidy.groupby(['sentiment','token'])['token'] \
  .count() \
  .reset_index(name='count') \
@@ -72,6 +75,13 @@ mUsado = tweets_tidy.groupby(['sentiment','token'])['token'] \
  .apply(lambda x: x.sort_values('count', ascending=False).head(10))
 masUsado = mUsado.groupby(level=0)['token'].apply(list)
 
+
+menUsado = tweets_tidy.groupby(['sentiment','token'])['token'] \
+ .count() \
+ .reset_index(name='count') \
+ .groupby('sentiment') \
+ .apply(lambda x: x.sort_values('count', ascending=True).head(10))
+menosUsado = menUsado.groupby(level=0)['token'].apply(list)
 
 # Palabras distintas utilizadas todos los tweets respecto al sentimiento
 # ==============================================================================
@@ -143,6 +153,25 @@ def mostrar_datos():
 
 
 
+
+def database_num_des():
+  caracteristicas = ["Filas","Atributos","Memoria","Faltantes"]
+  Filas = len(tweets)
+  Columnas = len(tweets.columns)
+  Memoria = round(tweets.memory_usage(deep=True).sum()/(1024*1024),4)
+  A = tweets.notnull().sum()
+  B = tweets.count()
+  suma = sum([x1 - x2 for (x1, x2) in zip(A, B)])
+  porcentaje = (suma*100)/B.sum()
+  x = {
+    "Filas": Filas,
+    "Atributos": Columnas,
+    "Memoria": Memoria,
+    "Porcentaje_faltante" : porcentaje
+    }
+  return json.dumps(x)
+
+
 app = Flask(__name__)
 
 
@@ -161,6 +190,11 @@ def database_information_data():
     return parsed
 
 
+@app.route('/database/num_descripcion')
+def database_num_descripcion():
+    return database_num_des()
+
+
 @app.route('/database/data_time')
 def database_date_time():
     return tweets.groupby('ID')['date_time'].apply(list).to_json()
@@ -175,14 +209,25 @@ def database_words_mas():
     parsed = json.loads(result)
     return parsed
 
+@app.route('/database/words_menos_usadas')
+def database_words_meno():
+    result = menosUsado.to_json()
+    parsed = json.loads(result)
+    return parsed
+
+
 
 @app.route('/database/total_sentiment')
 def database_total_autor():
-    return tweets_tidy.groupby(by='sentiment')['token'].count().to_json()
+    result = tweets_tidy.groupby(by='sentiment')['token'].count().to_json()
+    parsed = json.loads(result)
+    return parsed
 
 @app.route('/database/distinct_sentiment')
 def database_distinct_autor():
-    return tweets_tidy.groupby(by='sentiment')['token'].nunique().to_json()
+    result =  tweets_tidy.groupby(by='sentiment')['token'].nunique().to_json()
+    parsed = json.loads(result)
+    return parsed
 
 @app.route('/database/media_desviacion')
 def database_media_desviacion():
