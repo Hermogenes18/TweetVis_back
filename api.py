@@ -172,6 +172,20 @@ def database_num_des():
   return json.dumps(x)
 
 
+def database_descripcion():
+  ID = "elecEEUU2016"
+  nombre = "Elecciones EEUU. 2016"
+  descripcion_dataset = "El dataset son tweets recopilados el día de las elecciones presidenciales de EE. UU. De 2016 (8-9 de noviembre de 2016 UTC). Este conjunto de datos contiene los sentimientos analizados con el hashtag #Hillary o #Trump."
+  autor = "Erick Cuenca"
+  x = {
+    "ID": ID,
+    "nombre": nombre,
+    "descripcion_dataset": descripcion_dataset,
+    "autor" : autor
+    }
+  return json.dumps(x)
+
+
 app = Flask(__name__)
 
 
@@ -188,6 +202,11 @@ def database_information_data():
     result = a.to_json(orient="index")
     parsed = json.loads(result)
     return parsed
+
+
+@app.route('/database/word_descripcion')
+def database_word_descripcion():
+    return database_descripcion()
 
 
 @app.route('/database/num_descripcion')
