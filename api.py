@@ -65,6 +65,14 @@ tweets_tidy = tweets_tidy.rename(columns={'texto_tokenizado':'token'})
 tweets_tidy.groupby(by='sentiment')['token'].count()
 
 
+mUsado = tweets_tidy.groupby(['sentiment','token'])['token'] \
+ .count() \
+ .reset_index(name='count') \
+ .groupby('sentiment') \
+ .apply(lambda x: x.sort_values('count', ascending=False).head(10))
+masUsado = mUsado.groupby(level=0)['token'].apply(list)
+
+
 # Palabras distintas utilizadas todos los tweets respecto al sentimiento
 # ==============================================================================
 #print('----------------------------')
@@ -91,6 +99,8 @@ stop_words.extend(("amp", "xa", "xe"))
 # ==============================================================================
 tweets_tidy = tweets_tidy[~(tweets_tidy["token"].isin(stop_words))]
 
+Sin_StopW = tweets_tidy.groupby(by='ID')['token'].apply(list)
+tweets['Sin_StopWords']=Sin_StopW
 
 # Pivotado de datos
 # ==============================================================================
@@ -158,6 +168,13 @@ def database_date_time():
 @app.route('/database/tiempo')
 def database_tiempo():
     return tweets.groupby('ID')['date_time'].apply(list).to_json()
+
+@app.route('/database/words_mas_usadas')
+def database_words_mas():
+    result = masUsado.to_json()
+    parsed = json.loads(result)
+    return parsed
+
 
 @app.route('/database/total_sentiment')
 def database_total_autor():
