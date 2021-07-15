@@ -78,6 +78,27 @@ def database_words_meno():
     parsed = json.loads(result)
     return parsed
 
+
+#regresa el numero total de palabras usadas por cada sentimiento
+@app.route('/database/sentimiento_dia/<dia>')
+def database_sentiment_per_day(dia):
+    aux1 = aux[aux.dia != dia]
+    result = aux1.groupby('sentiment')['ID'].count().to_json()
+    parsed = json.loads(result)
+    return parsed
+
+
+#Retorna el total de 
+@app.route('/database/sentimiento_dia')
+def database_sentiment_day():
+    aux = tweets
+    aux['hora'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.hour)
+    aux['dia'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.month)
+    result = aux.groupby('dia')['ID'].count().to_json()
+    parsed = json.loads(result)
+    return parsed
+
+
 #Retorna el numero de tweets por cada sentimiento
 @app.route('/database/tweets_sentiment')
 def database_total_tweets_autor():
@@ -109,6 +130,14 @@ def database_distinct_autor():
     result =  tweets_tidy.groupby(by='sentiment')['token'].nunique().to_json()
     parsed = json.loads(result)
     return parsed
+
+
+#regresa la longitud promedio de tweets por cada sentimiento
+@app.route('/database/media_tweets')
+def database_media():
+    temp_df = pd.DataFrame(tweets_tidy.groupby(by = ["sentiment", "ID"])["token"].count())
+    result = temp_df.reset_index().groupby("sentiment")["token"].agg(['mean']).to_json()
+    return json.loads(result)
 
 #regresa la media y desviacion por cada sentimiento
 @app.route('/database/media_desviacion')
