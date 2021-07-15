@@ -78,6 +78,14 @@ def database_words_meno():
     parsed = json.loads(result)
     return parsed
 
+#Retorna el numero de tweets por cada sentimiento
+@app.route('/database/tweets_sentiment')
+def database_total_tweets_autor():
+    result = tweets.groupby('sentiment')['text'].count().to_json()
+    parsed = json.loads(result)
+    return parsed
+
+
 #regresa el numero total de palabras usadas por cada sentimiento
 @app.route('/database/total_sentiment')
 def database_total_autor():
