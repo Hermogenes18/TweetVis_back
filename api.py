@@ -87,6 +87,16 @@ def database_total_tweets_autor():
 
 
 #regresa el numero total de palabras usadas por cada sentimiento
+@app.route('/database/sentimiento/<string:sentimiento>')
+def database_sentiment_words(sentimiento):
+    df_temp = tweets_tidy[tweets_tidy.sentiment == sentimiento]
+    counts  = df_temp['token'].value_counts(ascending=False).head(10)
+    result = counts.to_json()
+    parsed = json.loads(result)
+    return parsed
+
+
+#regresa el numero total de palabras usadas por cada sentimiento
 @app.route('/database/total_sentiment')
 def database_total_autor():
     result = tweets_tidy.groupby(by='sentiment')['token'].count().to_json()
