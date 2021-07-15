@@ -3,6 +3,10 @@ from aplicaciones import *
 
 app = Flask(__name__)
 
+aux = tweets
+aux['hora'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.hour)
+aux['dia'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.month)
+
 '''
 Retorna toda la base de datos
 '''
