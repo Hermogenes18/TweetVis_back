@@ -82,7 +82,7 @@ def database_words_meno():
 #regresa el numero total de palabras usadas por cada sentimiento
 @app.route('/database/sentimiento_dia/<dia>')
 def database_sentiment_per_day(dia):
-    aux1 = aux[aux.dia != dia]
+    aux1 = aux[aux.dia == int(dia)]
     result = aux1.groupby('sentiment')['ID'].count().to_json()
     parsed = json.loads(result)
     return parsed
