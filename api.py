@@ -7,6 +7,10 @@ aux = tweets
 aux['hora'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.hour)
 aux['dia'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.month)
 
+f = open('pca.json',)
+pca = json.load(f)
+
+
 '''
 Retorna toda la base de datos
 '''
@@ -154,6 +158,11 @@ def database_media_desviacion():
 def database_correlacionn():
     result = tweets_pivot.corr(method=similitud_coseno).to_json()
     return json.loads(result)
+
+#retorna el json del PCA 
+@app.route('/database/pca')
+def database_pca():
+    return pca
 
 
 @app.route('/')
