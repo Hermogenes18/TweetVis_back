@@ -185,7 +185,3 @@ def database_descripcion():
     "autor" : autor
     }
   return json.dumps(x)
-
-aux = tweets
-aux['hora'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.hour)
-aux['dia'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.month)

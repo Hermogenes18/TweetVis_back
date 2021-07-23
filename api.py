@@ -10,6 +10,9 @@ aux['dia'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.month)
 f = open('pca.json',)
 pca = json.load(f)
 
+f = open('pca_polarity.json',)
+pca_polarity = json.load(f)
+
 
 '''
 Retorna toda la base de datos
@@ -163,6 +166,11 @@ def database_correlacionn():
 @app.route('/database/pca')
 def database_pca():
     return pca
+
+#retorna el json del PCA 
+@app.route('/database/pca_polarity')
+def database_pca_polarity():
+    return pca_polarity
 
 
 @app.route('/')
