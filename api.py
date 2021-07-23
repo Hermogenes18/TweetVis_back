@@ -167,8 +167,8 @@ def database_correlacionn():
 def database_pca():
     return pca
 
-#retorna el json del PCA 
-@app.route('/database/pca_polarity')
+#retorna el json de la base de datos con polaridad
+@app.route('/database/polarity')
 def database_pca_polarity():
     return pca_polarity
 
