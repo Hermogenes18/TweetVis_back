@@ -10,7 +10,7 @@ aux['dia'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.month)
 f = open('pca.json',)
 pca = json.load(f)
 
-f = open('pca_polarity.json',)
+f = open('pca_polaridad.json',)
 pca_polarity = json.load(f)
 
 
