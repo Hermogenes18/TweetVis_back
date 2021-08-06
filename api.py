@@ -7,6 +7,8 @@ aux = tweets
 aux['hora'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.hour)
 aux['dia'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.month)
 
+
+
 f = open('pca_tsne.json',)
 tsne = json.load(f)
 
@@ -16,6 +18,8 @@ tsne_texto = json.load(f1)
 f2 = open('pca_polarity.json',)
 pca_polarity = json.load(f2)
 
+f3 = open('pca.json',)
+pca = json.load(f3)
 
 '''
 Retorna toda la base de datos
@@ -165,11 +169,18 @@ def database_correlacionn():
     result = tweets_pivot.corr(method=similitud_coseno).to_json()
     return json.loads(result)
 
-#retorna el json del PCA 
-@app.route('/database/tsne')
-def database_pca():
-    return pca_tsne
 
+#retorna el json del pca 
+@app.route('/database/pca')
+def database_pca():
+    return pca
+
+#retorna el json del tsne 
+@app.route('/database/tsne')
+def database_tsne():
+    return tsne
+
+#retorna el json del tsne con texto
 @app.route('/database/tsne_texto')
 def database_tsne_texto():
     return tsne_texto
