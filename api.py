@@ -8,10 +8,13 @@ aux['hora'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.hour)
 aux['dia'] = pd.to_datetime(tweets['date_time']).apply(lambda x: x.month)
 
 f = open('pca_tsne.json',)
-pca = json.load(f)
+tsne = json.load(f)
 
-f = open('pca_polarity.json',)
-pca_polarity = json.load(f)
+f1 = open('pca_tsne_texto.json',)
+tsne_texto = json.load(f1)
+
+f2 = open('pca_polarity.json',)
+pca_polarity = json.load(f2)
 
 
 '''
@@ -163,9 +166,14 @@ def database_correlacionn():
     return json.loads(result)
 
 #retorna el json del PCA 
-@app.route('/database/pca')
+@app.route('/database/tsne')
 def database_pca():
-    return pca
+    return pca_tsne
+
+@app.route('/database/tsne_texto')
+def database_tsne_texto():
+    return tsne_texto
+
 
 #retorna el json de la base de datos con polaridad
 @app.route('/database/polarity')
