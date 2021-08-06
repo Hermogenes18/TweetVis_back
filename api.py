@@ -18,7 +18,7 @@ tsne_texto = json.load(f1)
 f2 = open('pca_polarity.json',)
 pca_polarity = json.load(f2)
 
-f3 = open('pca.json',)
+f3 = open('pca_text.json',)
 pca = json.load(f3)
 
 '''
